@@ -149,6 +149,8 @@ public class ThreadAtendimento extends Thread {
 		                seguidor1.close();
 		                seguidor2.close();
 		                
+		                //Envia mensagem pro CLIENTE
+		                objetoOut.writeObject(mensagemRecebida);
                 		
                 	}
 	                //QUANDO O SERVIDOR NAO E O LIDER
@@ -177,7 +179,8 @@ public class ThreadAtendimento extends Thread {
 						//Fechamento do canal
 						lider.close();
 						
-                		
+						//ENVIA MENSAGEM PARA O CLIENTE
+						objetoOut.writeObject(mensagemRecebidaLider);
                 		
                 	}
                 	
@@ -207,6 +210,10 @@ public class ThreadAtendimento extends Thread {
                 	mensagemRecebida.setIpServidor(ipServ);
                 	mensagemRecebida.setPortaServ(portaServ);
                 	
+                	
+                	//ENVIA MENSAGEM PARA O CLIENTE
+                	objetoOut.writeObject(mensagemRecebida);
+                	
                 }
                 
                 
@@ -227,16 +234,17 @@ public class ThreadAtendimento extends Thread {
                 		
             		}   
                 	System.out.println("Cheguei ate aqui");
-                	       	
                 	
+                	//ENVIA MENSAGEM PARA O CLIENTE
+                	objetoOut.writeObject(mensagemRecebida);
                 	
                 }
                 
                 
                               
                 
-				objetoOut.writeObject(mensagemRecebida);
 				
+				//A MINHA THREAD NO SERVIDOR JA COMPRIU SEU PAPEL E A FINALIZA
 				no.close();
 				
 				
