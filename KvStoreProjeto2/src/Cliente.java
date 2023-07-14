@@ -104,7 +104,7 @@ public class Cliente {
 						
 						
 						//Cria uma conexão com o servidor
-						Socket s = new Socket("127.0.0.1",10098);
+						Socket s = new Socket("127.0.0.1",portas.get(gerador.nextInt(3)));
 						
 						//Ira definir os objetos de saida e entrada a serem enviados por tcp
 						ObjectOutputStream objetoOut = new ObjectOutputStream(s.getOutputStream());

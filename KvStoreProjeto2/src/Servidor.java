@@ -154,29 +154,29 @@ public class ThreadAtendimento extends Thread {
 	                //QUANDO O SERVIDOR NAO E O LIDER
                 	else {
 	                	
-	                	/*
+	                	
 	                	//Cria uma conexão com o servidor
 						Socket lider = new Socket("127.0.0.1", portaLider);
 						
 	
 						//Ira definir os objetos de saida e entrada a serem enviados ao ServidorPrincipal
-						ObjectOutputStream objetoOutLider = new ObjectOutputStream(lider.getOutputStream());
-		                ObjectInputStream objetoInLider = new ObjectInputStream(lider.getInputStream());
+						ObjectOutputStream outLider = new ObjectOutputStream(lider.getOutputStream());
+		                ObjectInputStream inLider = new ObjectInputStream(lider.getInputStream());
 		                
 		                //
-		                mensagemRecebida.setAcao("PUTSERVIDOR");
+		                mensagemRecebida.setAcao("PUT");
 								                
 						//Classe a ser enviada
-						objetoOutLider.writeObject(mensagemRecebida);
+						outLider.writeObject(mensagemRecebida);
 						
 						//Classe a ser recebida;
-						Mensagem mensagemRecebidaLider = (Mensagem) objetoInLider.readObject();
+						Mensagem mensagemRecebidaLider = (Mensagem) inLider.readObject();
 					
 						
 						
 						//Fechamento do canal
 						lider.close();
-						*/
+						
                 		
                 		
                 	}
