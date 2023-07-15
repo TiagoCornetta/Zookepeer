@@ -9,8 +9,11 @@ public class Mensagem implements Serializable {
 	public String ipServidor = null; 
 	public int portaServ = 0;
 	public String m = null;
+	public String ipCliente = null;
+	public int portaCliente = 0;
 	
-	public Mensagem(String acao,String key,String value,int timeStamp, String ipServidor, int portaServ, String m) {
+	
+	public Mensagem(String acao,String key,String value,int timeStamp, String ipServidor, int portaServ, String m,String ipCliente, int portaCliente) {
 		this.acao = acao;
 		this.key = key;
 		this.value = value;
@@ -18,6 +21,8 @@ public class Mensagem implements Serializable {
 		this.ipServidor = ipServidor;
 		this.portaServ = portaServ;
 		this.m = m;
+		this.ipCliente = ipCliente;
+		this.portaCliente = portaCliente;
 	}
 
 	public String getAcao() {

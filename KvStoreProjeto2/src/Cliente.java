@@ -20,6 +20,10 @@ public class Cliente {
 				String auxIp;
 				int porta;
 				
+				//variaveis que armazenam informações do cliente
+				String ipCliente;
+				int portaCliente;
+				
 				//TimeStamp do meu cliente inicializado em zero
 				int timeStamp  = 0;
 				
@@ -30,16 +34,36 @@ public class Cliente {
 		        ArrayList<Integer> portas = new ArrayList<>();
 		        
 		        
+				//menu para INIT
+		        int init = 0;
+		        System.out.println("(MENU DE INIT DO CLIENTE)");
+		        while(init!=1) {
+		        	System.out.println("DIGITE 1 PARA INICAR O CLIENTE:");
+		        	init = scan.nextInt(); scan.nextLine();
+		        }
+		        System.out.println();
 				
-				
+		        
+		        
+		        //menu para pegar as informações do cliente
+		        System.out.println("(INFORMACOES CLIENTE)");
+		        System.out.println("DIGITE O IP DO CLIENTE:");
+		        ipCliente = scan.nextLine();
+		        System.out.println("DIGITE A PORTA DO CLIENTE:");
+		        portaCliente = scan.nextInt(); scan.nextLine();
+		        System.out.println();
+		        
+		        
+		        
 				
 				//Para pegar o IP e Porta dos 3 servidores
 				//Como estamos trabalhando em uma mesma máquina os servidores se diferencirão por portas e não por ip
+		        System.out.println("(INFORMACOES SERVIDORES)");
 				for(int i = 0; i < 3 ; i++) {
 					int aux = i + 1;
-					System.out.println("Digite o ip do servidor " + aux  + ":");
+					System.out.println("DIGITE O IP DO SERVIDOR [" + aux  + "]:");
 					auxIp = scan.nextLine();
-					System.out.println("Digite a porta do servidor " + aux + ":");
+					System.out.println("DIGITE A PORTA DO SERVIDOR [" + aux + "]:");
 					porta = scan.nextInt(); scan.nextLine();
 					portas.add(porta);
 				}
@@ -49,19 +73,22 @@ public class Cliente {
 				//Menu de interação com o cliente
 				int n = 0;
 				while(n !=3) {
-					System.out.println("Digite a opcao que deseja realizar:");
-					System.out.println("1 - para realizar o PUT ");
-					System.out.println("2 - para realizar o GET");
-					System.out.println("3 - para finalizar o cliente");
+					System.out.println("(MENU PRINCIPAL)");
+					System.out.println("DIGITE A OPCAO QUE DESEJA REALIZAR:");
+					System.out.println("1 - PUT ");
+					System.out.println("2 - GET");
+					System.out.println("3 - FINALIZAR");
 					n = scan.nextInt();scan.nextLine();
 					
 					
 	                // PUT DO CLIENTE
 					if(n == 1) {
 						//Pegando a key e o value a serem enviados ao servidor
-						System.out.println("Digite a key a ser enviada:");
+						System.out.println();
+						System.out.println("(MENU PUT)");
+						System.out.println("DIGITE A KEY A SER ENVIADA:");
 						key = scan.nextLine();
-						System.out.println("Digite o value a ser enviado:");
+						System.out.println("DIGITE O VALUE A SER ENVIADO:");
 						value = scan.nextLine();
 						
 						//Cria uma conexão com o servidor
@@ -72,7 +99,7 @@ public class Cliente {
 		                ObjectInputStream objetoIn = new ObjectInputStream(s.getInputStream());						
 						
 		                //Cria a mensagem a ser enviada
-		                Mensagem mensagem = new Mensagem("PUT",key,value,timeStamp,null,0,null);
+		                Mensagem mensagem = new Mensagem("PUT",key,value,timeStamp,null,0,null,ipCliente,portaCliente);
 					
 						//Classe a ser enviada
 						objetoOut.writeObject(mensagem);
@@ -97,8 +124,9 @@ public class Cliente {
 					}
 					//GET DO CLIENTE
 					else if (n == 2) {
-						
-						System.out.println("Digite a Key a ser procurada:");
+						System.out.println();
+						System.out.println("MENU GET");
+						System.out.println("DIGITE A KEY A SER PROCURADA:");
 						key= scan.nextLine();
 						
 						
@@ -111,7 +139,7 @@ public class Cliente {
 		                ObjectInputStream objetoIn = new ObjectInputStream(s.getInputStream());						
 						
 		                //Cria a mensagem a ser enviada
-		                Mensagem mensagem = new Mensagem("GET",key,value,timeStamp,null,0,null);
+		                Mensagem mensagem = new Mensagem("GET",key,value,timeStamp,null,0,null,ipCliente,portaCliente);
 					
 						//Classe a ser enviada
 						objetoOut.writeObject(mensagem);
@@ -120,7 +148,7 @@ public class Cliente {
 						Mensagem mensagemRecebida = (Mensagem) objetoIn.readObject();
 						
 						System.out.println("GET key: " + mensagemRecebida.getKey() + " value: " + mensagemRecebida.getValue() + " obtido servidor IP: "+ mensagemRecebida.getIpServidor()+ ":" + mensagemRecebida.getPortaServ()) ;
-						System.out.println(",meu timestamp "+ timeStamp +  " do servidor: " + mensagemRecebida.getTimeStamp());
+						System.out.println(",meu timestamp: "+ timeStamp +  " do servidor: " + mensagemRecebida.getTimeStamp());
 						
 						
 						
