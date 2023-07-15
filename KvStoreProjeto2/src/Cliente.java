@@ -110,7 +110,7 @@ public class Cliente {
 						timeStamp = mensagemRecebida.getTimeStamp();
 						
 						//Mensagem de put recebida
-						System.out.println();
+						
 						System.out.println("PUT_OK key: " + mensagemRecebida.getKey() + " value: " + mensagemRecebida.getValue() + " timestamp: " + mensagemRecebida.getTimeStamp());
 						System.out.println("Realizada no servidor IP: " + mensagemRecebida.getIpServidor() + " Porta: "+ mensagemRecebida.getPortaServ());
 						System.out.println();
@@ -149,7 +149,7 @@ public class Cliente {
 						
 						System.out.println("GET key: " + mensagemRecebida.getKey() + " value: " + mensagemRecebida.getValue() + " obtido servidor IP: "+ mensagemRecebida.getIpServidor()+ ":" + mensagemRecebida.getPortaServ()) ;
 						System.out.println(",meu timestamp: "+ timeStamp +  " do servidor: " + mensagemRecebida.getTimeStamp());
-						
+						System.out.println();
 						
 						
 						//Fechamento do canal

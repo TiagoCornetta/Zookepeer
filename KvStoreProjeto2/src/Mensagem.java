@@ -81,6 +81,22 @@ public class Mensagem implements Serializable {
 		this.m = m;
 	}
 
+	public String getIpCliente() {
+		return ipCliente;
+	}
+
+	public void setIpCliente(String ipCliente) {
+		this.ipCliente = ipCliente;
+	}
+
+	public int getPortaCliente() {
+		return portaCliente;
+	}
+
+	public void setPortaCliente(int portaCliente) {
+		this.portaCliente = portaCliente;
+	}
+
 	
 
 	

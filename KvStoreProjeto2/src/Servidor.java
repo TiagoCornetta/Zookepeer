@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.util.Scanner;
 import java.util.Map;
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -26,6 +27,9 @@ public class Servidor {
 		Map<String,Mensagem> map = new HashMap<String,Mensagem>();
 		
 		
+		//ListaServidorSeguidores 
+        ArrayList<Integer> portasSeguidores = new ArrayList<>();
+        
 		
 		//Ira pegar as informcao do servidor e da porta do lider
 		System.out.println("Digite o ip do Servidor:");
@@ -38,6 +42,20 @@ public class Servidor {
 		portaLider = scan.nextInt(); scan.nextLine();
 		
 		
+		if(portaLider == 10098) {
+			portasSeguidores.add(10099);
+			portasSeguidores.add(10097);
+		}else if (portaLider == 10097) {
+
+			portasSeguidores.add(10099);
+			portasSeguidores.add(10098);
+		}else if(portaLider == 10099) {
+
+			portasSeguidores.add(10098);
+			portasSeguidores.add(10097);
+		}
+		
+		
 		
 		try (
 		//Inicializa o meu server com sua devida porta e fica esperando requisicoes 
@@ -45,7 +63,7 @@ public class Servidor {
 			while(true) {
 				//Ira tratar por thread a solicitacao dos clientes para ficar livre para novas requisicoes
 				Socket no = serverSocket.accept();
-				ThreadAtendimento thread = servidor.new ThreadAtendimento(no,map,portaServ,portaLider,ipServ);
+				ThreadAtendimento thread = servidor.new ThreadAtendimento(no,map,portaServ,portaLider,ipServ,portasSeguidores);
 				thread.start();
 			}
 		}
@@ -63,16 +81,18 @@ public class ThreadAtendimento extends Thread {
 		private Map<String, Mensagem> map;
 		private int portaServ,portaLider;
 		private String ipServ;
+		private ArrayList<Integer> portas;
 		
 		//random para gerar um timeStamp aleatorio
 		Random gerador = new Random();
 		
-		public ThreadAtendimento(Socket node,Map map,int portaServ,int portaLider,String ipServ) {
+		public ThreadAtendimento(Socket node,Map map,int portaServ,int portaLider,String ipServ, ArrayList porta) {
 			no = node;
 			this.map = map;
 			this.portaServ = portaServ;
 			this.portaLider = portaLider;
 			this.ipServ = ipServ;
+			this.portas = porta;
 		}
 		
 	
@@ -102,6 +122,10 @@ public class ThreadAtendimento extends Thread {
                 		mensagemRecebida.setIpServidor(ipServ);
                 		mensagemRecebida.setPortaServ(portaServ);
                 		
+                		//Print na Console
+                		System.out.println("Cliente " + mensagemRecebida.getIpCliente() + ":" + mensagemRecebida.getPortaCliente() + " PUT Key:[" + mensagemRecebida.getKey() + "] value:[" + mensagemRecebida.getValue()+"]");
+                		
+                		
                 		//Validando se a key ja existe
                 		if(map.get(mensagemRecebida.getKey())!= null) {
                 			Mensagem aux = (Mensagem) map.get(mensagemRecebida.getKey());
@@ -122,8 +146,8 @@ public class ThreadAtendimento extends Thread {
                 		
                 		
                 		//Inicializando dois sockets para envio aos servidores
-						Socket seguidor1 = new Socket("127.0.0.1", 10098);
-						Socket seguidor2 = new Socket("127.0.0.1", 10099);
+						Socket seguidor1 = new Socket("127.0.0.1", portas.get(0));
+						Socket seguidor2 = new Socket("127.0.0.1", portas.get(1));
                 		
                 		
 						
@@ -135,7 +159,7 @@ public class ThreadAtendimento extends Thread {
 		                ObjectOutputStream outSeg2 = new ObjectOutputStream(seguidor2.getOutputStream());
 		                ObjectInputStream inSeg2 = new ObjectInputStream(seguidor2.getInputStream());
                 		
-		                System.out.println("cheguei ate aqui");
+		            
 		                
 		                //Replicando a ambos os servidores
 		                outSeg1.writeObject(mensagemRecebida);
@@ -151,6 +175,7 @@ public class ThreadAtendimento extends Thread {
 		                
 		                //Envia mensagem pro CLIENTE
 		                objetoOut.writeObject(mensagemRecebida);
+		                System.out.println();
                 		
                 	}
 	                //QUANDO O SERVIDOR NAO E O LIDER
@@ -165,9 +190,11 @@ public class ThreadAtendimento extends Thread {
 						ObjectOutputStream outLider = new ObjectOutputStream(lider.getOutputStream());
 		                ObjectInputStream inLider = new ObjectInputStream(lider.getInputStream());
 		                
-		                //
+		                //Para o Servidor principal atuar
 		                mensagemRecebida.setAcao("PUT");
-								                
+						
+		                System.out.println("Encaminhado PUT Key:[" + mensagemRecebida.getKey() +"] value:[" + mensagemRecebida.getValue() + "]" );
+		                System.out.println();
 						//Classe a ser enviada
 						outLider.writeObject(mensagemRecebida);
 						
@@ -189,6 +216,10 @@ public class ThreadAtendimento extends Thread {
                 
                 //REQUISICAO GET
                 else if (acao.equals("GET")) {
+                	
+                	//timeStampAux
+                	int timeStampAux = mensagemRecebida.getTimeStamp();
+                	
                 	if(map.get(mensagemRecebida.getKey())!= null) {
                 		Mensagem aux = (Mensagem) map.get(mensagemRecebida.getKey());
                 		
@@ -210,7 +241,10 @@ public class ThreadAtendimento extends Thread {
                 	mensagemRecebida.setIpServidor(ipServ);
                 	mensagemRecebida.setPortaServ(portaServ);
                 	
-                	
+                	//Imprimir mensagem na console
+            		System.out.println("Cliente " + mensagemRecebida.getIpCliente() + ":" + mensagemRecebida.getPortaCliente() + " GET:[" + mensagemRecebida.getKey() + "] ts:[" +timeStampAux +"]");
+            		System.out.println("Meu ts e " + mensagemRecebida.getTimeStamp() + ",portanto devolvendo [" + mensagemRecebida.getValue() +"]" );
+                	System.out.println();
                 	//ENVIA MENSAGEM PARA O CLIENTE
                 	objetoOut.writeObject(mensagemRecebida);
                 	
@@ -233,8 +267,8 @@ public class ThreadAtendimento extends Thread {
                 		map.put(mensagemRecebida.getKey(),mensagemRecebida);
                 		
             		}   
-                	System.out.println("Cheguei ate aqui");
-                	
+            		 System.out.println("REPLICATION Key:[" + mensagemRecebida.getKey() +"] value:[" + mensagemRecebida.getValue() + "] ts:["+ mensagemRecebida.getTimeStamp()+"]" );
+            		 System.out.println();
                 	//ENVIA MENSAGEM PARA O CLIENTE
                 	objetoOut.writeObject(mensagemRecebida);
                 	
