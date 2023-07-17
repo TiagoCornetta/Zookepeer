@@ -175,6 +175,7 @@ public class ThreadAtendimento extends Thread {
 		                seguidor1.close();
 		                seguidor2.close();
 		                
+		                System.out.println("Enviando PUT_OK ao Cliente "+ mensagemRecebida.getIpCliente() + ":" + mensagemRecebida.getPortaCliente() + " da Key:[" + mensagemRecebida.getKey() + "] ts[" + mensagemRecebida.getTimeStamp() +"]");
 		                //Envia mensagem pro CLIENTE
 		                objetoOut.writeObject(mensagemRecebida);
 		                System.out.println();
