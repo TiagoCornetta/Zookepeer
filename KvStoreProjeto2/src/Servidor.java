@@ -170,6 +170,8 @@ public class ThreadAtendimento extends Thread {
 		                Mensagem mensagemSeg1 = (Mensagem) inSeg1.readObject();
 		                Mensagem mensagemSeg2 = (Mensagem) inSeg2.readObject();
 		                
+		                System.out.println("Porta:" + mensagemSeg1.getPortaServ() + " Resposta:" + mensagemSeg1.getM());
+		                System.out.println("Porta:" + mensagemSeg2.getPortaServ() + " Resposta:" + mensagemSeg2.getM());
 		                seguidor1.close();
 		                seguidor2.close();
 		                
@@ -269,6 +271,9 @@ public class ThreadAtendimento extends Thread {
             		}   
             		 System.out.println("REPLICATION Key:[" + mensagemRecebida.getKey() +"] value:[" + mensagemRecebida.getValue() + "] ts:["+ mensagemRecebida.getTimeStamp()+"]" );
             		 System.out.println();
+            		 
+            		 mensagemRecebida.setM("REPLICATION_OK");
+            		 mensagemRecebida.setPortaServ(portaServ);
                 	//ENVIA MENSAGEM PARA O CLIENTE
                 	objetoOut.writeObject(mensagemRecebida);
                 	
