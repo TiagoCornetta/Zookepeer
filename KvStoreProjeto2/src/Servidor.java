@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 
 
+
 public class Servidor {
 	
 	public static void main(String[] args) throws Exception {
@@ -22,6 +23,8 @@ public class Servidor {
 		//Variaveis
 		String ipServ = null, ipLider = null;
 		int portaServ,portaLider;
+		
+		
 		
 		//inicializando a hashMap pois ira trabalhar com threads
 		Map<String,Mensagem> map = new HashMap<String,Mensagem>();
@@ -261,11 +264,10 @@ public class ThreadAtendimento extends Thread {
             		if(map.get(mensagemRecebida.getKey())!= null) {
             			Mensagem aux = (Mensagem) map.get(mensagemRecebida.getKey());
             			aux.setValue(mensagemRecebida.getValue());
-            			aux.setTimeStamp(gerador.nextInt(30));
+            			aux.setTimeStamp(mensagemRecebida.getTimeStamp());
             			mensagemRecebida.setTimeStamp(aux.getTimeStamp());
             		} else {
-            			//GERA UM TIMESTAMP ALEATORIO
-                		mensagemRecebida.setTimeStamp(gerador.nextInt(30));
+            			
                 		//COLOCA NA TABELA HASH DO LIDER
                 		map.put(mensagemRecebida.getKey(),mensagemRecebida);
                 		
